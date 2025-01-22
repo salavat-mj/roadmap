@@ -27,14 +27,20 @@ def add_row():
 if st.button("Добавить продукт"):
     add_row()
 
+# Разделитель
+divider = "<hr style='border: 0.2px solid #d7dee5;' />"
+st.markdown(divider, unsafe_allow_html=True)
+
+col_size = [1.3, 6, 2, 2, 2, 2, 2]
 # Таблица данных
 to_remove = None  # Индекс строки для удаления
 for i, row in enumerate(st.session_state.data):
-    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 6, 2, 2, 2, 2, 2])
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
     # Кнопка удаления строки (выровненная по нижнему краю)
     with col1:
-        st.markdown("<div style='height: 38px;'></div>", unsafe_allow_html=True)  # Пустое место для выравнивания
+        # st.text("")
+        st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)  # Пустое место для выравнивания
         if st.button("❌", key=f"remove_{i}"):
             to_remove = i  # Помечаем строку для удаления
 
@@ -78,9 +84,12 @@ df = pd.DataFrame(st.session_state.data)
 
 # Итоговые значения
 if not df.empty:
+    # Разделитель перед "Итого"
+    st.markdown(divider, unsafe_allow_html=True)  # Разделитель
+
     total = df[["Вес", "Белки", "Жиры", "Углеводы", "Калории"]].sum()
     # st.markdown("### Итого")
-    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 6, 2, 2, 2, 2, 2])
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
     with col1:
         st.text("")
@@ -99,8 +108,8 @@ if not df.empty:
 
     # Значения на 100 грамм
     # st.markdown("### На 100 грамм")
-    per_100g = total / total["Вес"] * 100
-    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 6, 2, 2, 2, 2, 2])
+    per_100g = (total / total["Вес"] * 100).fillna(0)
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
     with col1:
         st.text("")
