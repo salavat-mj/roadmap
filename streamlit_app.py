@@ -33,16 +33,15 @@ st.markdown(divider, unsafe_allow_html=True)
 
 col_size = [1.3, 6, 2, 2, 2, 2, 2]
 # Таблица данных
-to_remove = None  # Индекс строки для удаления
+updated_data = []  # Для хранения данных после обработки цикла
 for i, row in enumerate(st.session_state.data):
     col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
     # Кнопка удаления строки (выровненная по нижнему краю)
     with col1:
-        # st.text("")
-        st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)  # Пустое место для выравнивания
+        st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
         if st.button("❌", key=f"remove_{i}"):
-            to_remove = i  # Помечаем строку для удаления
+            continue  # Пропускаем добавление этой строки в updated_data
 
     # Выпадающий список с продуктами
     with col2:
@@ -75,9 +74,11 @@ for i, row in enumerate(st.session_state.data):
         st.text("Калории")
         st.write(round(row["Калории"], 2))
 
-# Удаление строки, если кнопка была нажата
-if to_remove is not None:
-    st.session_state.data.pop(to_remove)
+    # Если строка не была удалена, добавляем её в обновленные данные
+    updated_data.append(row)
+
+# Обновляем состояние с данными
+st.session_state.data = updated_data
 
 # Преобразование данных в DataFrame для расчетов
 df = pd.DataFrame(st.session_state.data)
@@ -85,10 +86,9 @@ df = pd.DataFrame(st.session_state.data)
 # Итоговые значения
 if not df.empty:
     # Разделитель перед "Итого"
-    st.markdown(divider, unsafe_allow_html=True)  # Разделитель
+    st.markdown(divider, unsafe_allow_html=True)
 
     total = df[["Вес", "Белки", "Жиры", "Углеводы", "Калории"]].sum()
-    # st.markdown("### Итого")
     col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
     with col1:
@@ -107,7 +107,6 @@ if not df.empty:
         st.write(round(total["Калории"], 2))
 
     # Значения на 100 грамм
-    # st.markdown("### На 100 грамм")
     per_100g = (total / total["Вес"] * 100).fillna(0)
     col1, col2, col3, col4, col5, col6, col7 = st.columns(col_size)
 
