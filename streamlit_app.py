@@ -79,20 +79,40 @@ df = pd.DataFrame(st.session_state.data)
 # Итоговые значения
 if not df.empty:
     total = df[["Вес", "Белки", "Жиры", "Углеводы", "Калории"]].sum()
-    st.markdown("### Итого")
-    st.write(
-        pd.DataFrame(
-            total.values.reshape(1, -1),
-            columns=["Вес, гр", "Бел, гр", "Жир, гр", "Угл, гр", "Кал, ккал"],
-        )
-    )
+    # st.markdown("### Итого")
+    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 6, 2, 2, 2, 2, 2])
+
+    with col1:
+        st.text("")
+    with col2:
+        st.text("Итого")
+    with col3:
+        st.write(total["Вес"])
+    with col4:
+        st.write(round(total["Белки"], 2))
+    with col5:
+        st.write(round(total["Жиры"], 2))
+    with col6:
+        st.write(round(total["Углеводы"], 2))
+    with col7:
+        st.write(round(total["Калории"], 2))
 
     # Значения на 100 грамм
+    # st.markdown("### На 100 грамм")
     per_100g = total / total["Вес"] * 100
-    st.markdown("### На 100 грамм")
-    st.write(
-        pd.DataFrame(
-            per_100g.values.reshape(1, -1),
-            columns=["Вес, гр", "Бел, гр", "Жир, гр", "Угл, гр", "Кал, ккал"],
-        )
-    )
+    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 6, 2, 2, 2, 2, 2])
+
+    with col1:
+        st.text("")
+    with col2:
+        st.text("На 100 г")
+    with col3:
+        st.write(round(per_100g["Вес"], 2))
+    with col4:
+        st.write(round(per_100g["Белки"], 2))
+    with col5:
+        st.write(round(per_100g["Жиры"], 2))
+    with col6:
+        st.write(round(per_100g["Углеводы"], 2))
+    with col7:
+        st.write(round(per_100g["Калории"], 2))
